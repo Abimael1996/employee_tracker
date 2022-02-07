@@ -1,10 +1,5 @@
-const mysql = require("mysql2");
 const inquirer = require("inquirer");
-
-const db = mysql.createConnection(
-    {host: "localhost", user: "root", password: "mypassword", database: "employee_db"},
-    console.log("CONNECTED TO EMPLOYEE DATABASE")
-)
+const queries = require("./queries");
 
 const menuOptions = ["What would you like to do?", "View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"];
 const addDepPrompt = ["Enter the name of the department you want to add"];
@@ -25,19 +20,25 @@ const menuInquirer = (menuOptions) => {
       .then((option) => {
           switch (option.options) {
               case menuOptions[1]:
-                  db.query("SELECT * FROM department", (err, results) =>
-                  console.table(results));
-                  menuInquirer(menuOptions);
+                  queries.viewDep()
+                  .then( ([rows,fields]) => {
+                      console.table(rows);
+                      menuInquirer(menuOptions);
+                  })
                   break;
               case menuOptions[2]:
-                  db.query("SELECT * FROM role", (err, results) =>
-                  console.table(results));
-                  menuInquirer(menuOptions);
+                  queries.viewRoles()
+                  .then(([rows,fields]) => {
+                      console.table(rows);
+                      menuInquirer(menuOptions);
+                  })
                   break;
               case menuOptions[3]:
-                  db.query("SELECT * FROM employee", (err, results) =>
-                  console.table(results));
-                  menuInquirer(menuOptions);
+                  queries.viewEmp()
+                  .then(([rows,field]) => {
+                      console.table(rows);
+                      menuInquirer(menuOptions);
+                  })
                   break;
               case menuOptions[8]:
                   console.log("Bye!");
@@ -49,3 +50,4 @@ const menuInquirer = (menuOptions) => {
 }
 
   menuInquirer(menuOptions);
+
