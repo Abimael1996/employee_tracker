@@ -18,3 +18,7 @@ VALUES
 ("Jon", "Snow", 1),
 ("Harvey", "Dent", 3),
 ("Michael", "Corleone", 4);
+
+UPDATE employee
+SET manager_id = 4
+WHERE id = 1;
