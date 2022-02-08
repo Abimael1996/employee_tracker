@@ -8,6 +8,8 @@ const addRolePrompt = ["Enter the name of the role", "What's the salary for that
 const addEmpPrompt = ["Enter employee's first name", "Enter employee's last name", "What's the employee's role?", "What's the employeer's manager?"];
 const updEmpRolePrompt = ["Select an employee to update", "What is the employee's new role?"];
 
+const departments = ["Sales", "Engineering", "Legal", "Finance"];
+
 const menuInquirer = (menuOptions) => {
     inquirer
       .prompt([
@@ -63,10 +65,12 @@ const addDepInquirer = (addDepPrompt) => {
           }
       ])
       .then((dep) => {
+          departments.push(dep.dep);
           const query = new Queries(dep.dep);
           query.addDep()
           .then(([rows,fields]) => {
               console.log("Departmend added");
+              console.log(departments);
               menuInquirer(menuOptions);
           })
       })
