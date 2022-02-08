@@ -6,8 +6,11 @@ const db = mysql.createConnection(
 )
 
 class Queries {
-    constructor(dep) {
-        this.dep = dep;
+    constructor(answ1, answ2, answ3, answ4) {
+        this.answ1 = answ1;
+        this.answ2 = answ2;
+        this.answ3 = answ3;
+        this.answ4 = answ4;
     }
 
     viewDep() {
@@ -23,7 +26,11 @@ class Queries {
     }
 
     addDep() {
-        return db.promise().query('INSERT INTO department (name) VALUES (?)', this.dep)
+        return db.promise().query('INSERT INTO department (name) VALUES (?)', this.answ1)
+    }
+
+    addRole() {
+        return db.promise().query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [this.answ1, this.answ2, this.answ3])
     }
 }
 
