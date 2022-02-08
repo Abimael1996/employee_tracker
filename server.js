@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
-const queries = require("./queries");
+const Queries = require("./queries");
+const queries = new Queries();
 
 const menuOptions = ["What would you like to do?", "View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"];
 const addDepPrompt = ["Enter the name of the department you want to add"];
@@ -21,7 +22,7 @@ const menuInquirer = (menuOptions) => {
           switch (option.options) {
               case menuOptions[1]:
                   queries.viewDep()
-                  .then( ([rows,fields]) => {
+                  .then(([rows,fields]) => {
                       console.table(rows);
                       menuInquirer(menuOptions);
                   })
@@ -40,6 +41,9 @@ const menuInquirer = (menuOptions) => {
                       menuInquirer(menuOptions);
                   })
                   break;
+              case menuOptions[4]:
+                  addDepInquirer(addDepPrompt);
+                  break;
               case menuOptions[8]:
                   console.log("Bye!");
                   break;
@@ -49,5 +53,23 @@ const menuInquirer = (menuOptions) => {
       })
 }
 
-  menuInquirer(menuOptions);
+const addDepInquirer = (addDepPrompt) => {
+    inquirer
+      .prompt([
+          {
+              name: "dep",
+              type: "input",
+              message: addDepPrompt[0]
+          }
+      ])
+      .then((dep) => {
+          const query = new Queries(dep.dep);
+          query.addDep()
+          .then(([rows,fields]) => {
+              console.log("Departmend added");
+              menuInquirer(menuOptions);
+          })
+      })
+}
 
+menuInquirer(menuOptions);
