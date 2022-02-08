@@ -46,6 +46,9 @@ const menuInquirer = (menuOptions) => {
               case menuOptions[4]:
                   addDepInquirer(addDepPrompt);
                   break;
+              case menuOptions[5]:
+                  addRoleInquirer(addRolePrompt);
+                  break;
               case menuOptions[8]:
                   console.log("Bye!");
                   break;
@@ -73,6 +76,44 @@ const addDepInquirer = (addDepPrompt) => {
               console.log(departments);
               menuInquirer(menuOptions);
           })
+      })
+}
+
+const addRoleInquirer = (addRolePrompt) => {
+    inquirer
+      .prompt([
+          {
+              name: "title",
+              type: "input",
+              message: addRolePrompt[0]
+          },
+          {
+              name: "salary",
+              type: "input",
+              message: addRolePrompt[1]
+          },
+          {
+              name: "dep",
+              type: "list",
+              message: addRolePrompt[2],
+              choices: [...departments]
+          }
+      ])
+      .then((answs) => {
+          const {title, salary, dep} = answs;
+          console.log(departments);
+          for(each of departments) {
+              if(each === dep) {
+                  console.log(departments.indexOf(each) + 1);
+                  const query = new Queries(title, salary, departments.indexOf(each) + 1);
+                  query.addRole()
+                  .then((row,field) => {
+                      console.log("Role added");
+                      menuInquirer(menuOptions);
+                  });
+                  break;
+              }
+          }
       })
 }
 
