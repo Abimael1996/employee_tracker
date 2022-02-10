@@ -96,17 +96,10 @@ const addRoleInquirer = (addRolePrompt) => {
           const {title, salary} = answs;
           queries.getDepId().then(([rows, fields]) => {
             const departments = rows.map((obj) => {
-                return { name: obj.name, id: obj.id }
+                return obj
             });
             inquirer
-              .prompt([
-                  {
-                    name: "dep",
-                    type: "list",
-                    message: addRolePrompt[2],
-                    choices: departments
-                  }
-              ])
+              .prompt(choicesPrompt("dep", addRolePrompt[2], departments))
               .then((dep) => {
                   console.log(dep);
                   console.log(departments);
@@ -146,15 +139,8 @@ const addEmpInquirer = (addEmpPrompt) => {
               const roles = rows.map((obj) => {
                   return { name: obj.title, roleId: obj.id}
               });
-              inquirer
-                .prompt([
-                    {
-                        name: "role",
-                        type: "list",
-                        message: addEmpPrompt[2],
-                        choices: roles
-                    }
-                ])
+              inquirer //role, addEmpPrompt2, roles
+                .prompt(choicesPrompt("role", addEmpPrompt[2], roles))
                 .then((role) => {
                     console.log(role);
                     console.log(roles);
@@ -165,15 +151,8 @@ const addEmpInquirer = (addEmpPrompt) => {
                                 const emps = rows.map((obj) => {
                                     return { name: obj.last_name, manId: obj.id }
                                 });
-                                inquirer
-                                  .prompt([
-                                      {
-                                          name: "man",
-                                          type: "list",
-                                          message: addEmpPrompt[3],
-                                          choices: emps
-                                      }
-                                  ])
+                                inquirer // man, emp3, emps
+                                  .prompt(choicesPrompt("man", addEmpPrompt[3], emps))
                                   .then((man) => {
                                       console.log(man);
                                       console.log(emps);
@@ -198,3 +177,15 @@ const addEmpInquirer = (addEmpPrompt) => {
 }
 
 menuInquirer(menuOptions);
+
+const choicesPrompt = (name, prompt, choices) => {
+    return [
+        {
+            name: name,
+            type: "list",
+            message: prompt,
+            choices: choices
+        }
+    ]
+}
+
