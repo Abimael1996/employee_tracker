@@ -100,20 +100,17 @@ const addRoleInquirer = (addRolePrompt) => {
             });
             inquirer
               .prompt(choicesPrompt("dep", addRolePrompt[2], departments))
-              .then((dep) => {
+              .then((depName) => {
+                  console.log(depName);
+                  const { dep } = depName;
                   console.log(dep);
                   console.log(departments);
-                  for(const each of departments) {
-                      const {name, id} = each;
-                      if(name === dep.dep) {
-                          const query = new Queries(title, salary)
-                          query.addRole(id).then(([rows,fields]) => {
-                            console.log("AHHHHHHHHHHHH!!!!!!!");
-                            menuInquirer(menuOptions);
-                        })
-                          break;
-                      }
-                  }
+                  const id = getForeignId(departments, dep);
+                  const query = new Queries(title, salary, id)
+                  query.addRole().then(([rows,fields]) => {
+                    console.log("Role added");
+                    menuInquirer(menuOptions);
+                })
               })
           })
       })
@@ -137,40 +134,35 @@ const addEmpInquirer = (addEmpPrompt) => {
           const {fName, lName} = answ;
           queries.getRoleId().then(([rows,fields]) => {
               const roles = rows.map((obj) => {
-                  return { name: obj.title, roleId: obj.id}
+                  return { name: obj.title, id: obj.id}
               });
-              inquirer //role, addEmpPrompt2, roles
+              inquirer 
                 .prompt(choicesPrompt("role", addEmpPrompt[2], roles))
-                .then((role) => {
+                .then((roleName) => {
+                    console.log(roleName);
+                    const { role } = roleName;
                     console.log(role);
                     console.log(roles);
-                    for(const each of roles){
-                        const {name, roleId} = each;
-                        if(name === role.role) {
-                            queries.getManId().then(([rows,fields]) => {
-                                const emps = rows.map((obj) => {
-                                    return { name: obj.last_name, manId: obj.id }
-                                });
-                                inquirer // man, emp3, emps
-                                  .prompt(choicesPrompt("man", addEmpPrompt[3], emps))
-                                  .then((man) => {
-                                      console.log(man);
-                                      console.log(emps);
-                                      for(const mana of emps) {
-                                          const { name, manId } = mana;
-                                          if(name === man.man) {
-                                              const query = new Queries(fName, lName, roleId, manId);
-                                              query.addEmp().then(([rows,fields]) => {
-                                                  console.log("Done!");
-                                                  menuInquirer(menuOptions);
-                                              })
-                                              break;
-                                          }
-                                      }
-                                  })
-                            })
-                        }
-                    }
+                    const roleId = getForeignId(roles, role);
+                    queries.getManId().then(([rows,fields]) => {
+                        const emps = rows.map((obj) => {
+                            return { name: obj.last_name, id: obj.id }
+                        });
+                        inquirer
+                          .prompt(choicesPrompt("man", addEmpPrompt[3], emps))
+                          .then((manName) => {
+                              console.log(manName);
+                              const { man } = manName;
+                              console.log(man);
+                              console.log(emps);
+                              const manId = getForeignId(emps, man);
+                              const query = new Queries(fName, lName, roleId, manId);
+                              query.addEmp().then(([rows,fields]) => {
+                                  console.log("Employee added!");
+                                  menuInquirer(menuOptions);
+                              })
+                          })
+                    })
                 })
           })
       })
@@ -187,5 +179,14 @@ const choicesPrompt = (name, prompt, choices) => {
             choices: choices
         }
     ]
+}
+
+const getForeignId = (titles, answ) => {
+    for(const each of titles) {
+        const {name, id} = each;
+        if(name === answ) {
+            return id;
+        }
+    }
 }
 
