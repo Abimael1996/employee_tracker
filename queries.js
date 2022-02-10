@@ -1,5 +1,3 @@
-const inquirer = require("inquirer");
-
 const mysql = require("mysql2");
 
 const db = mysql.createConnection(
@@ -31,14 +29,25 @@ class Queries {
         return db.promise().query('INSERT INTO department (name) VALUES (?)', this.answ1)
     }
 
+    getDepId() {
+        return db.promise().query("SELECT name, id FROM department")
+    }
+
     addRole(id) {
         return db.promise().query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [this.answ1, this.answ2, id])
     }
 
-    getDep() {
-        return db.promise().query("SELECT name, id FROM department")
-}
+    addEmp() {
+        return db.promise().query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [this.answ1, this.answ2, this.answ3, this.answ4])
+    }
 
+    getRoleId() {
+        return db.promise().query("SELECT title, id FROM role")
+    }
+
+    getManId() {
+        return db.promise().query("SELECT last_name, id FROM employee")
+    }
 }
 
 module.exports = Queries;
