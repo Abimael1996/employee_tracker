@@ -47,6 +47,9 @@ const menuInquirer = (menuOptions) => {
               case menuOptions[5]:
                   addRoleInquirer(addRolePrompt);
                   break;
+              case menuOptions[6]:
+                  addEmpInquirer(addEmpPrompt);
+                  break;
               case menuOptions[8]:
                   console.log("Bye!");
                   break;
@@ -91,7 +94,7 @@ const addRoleInquirer = (addRolePrompt) => {
       ])
       .then((answs) => {
           const {title, salary} = answs;
-          queries.getDep().then(([rows, fields]) => {
+          queries.getDepId().then(([rows, fields]) => {
             const departments = rows.map((obj) => {
                 return { name: obj.name, id: obj.id }
             });
@@ -100,7 +103,7 @@ const addRoleInquirer = (addRolePrompt) => {
                   {
                     name: "dep",
                     type: "list",
-                    message: "Please help me",
+                    message: addRolePrompt[2],
                     choices: departments
                   }
               ])
@@ -119,9 +122,79 @@ const addRoleInquirer = (addRolePrompt) => {
                       }
                   }
               })
-    })
+          })
       })
+}
 
+const addEmpInquirer = (addEmpPrompt) => {
+    inquirer
+      .prompt([
+          {
+              name: "fName",
+              type: "input",
+              message: addEmpPrompt[0]
+          },
+          {
+              name: "lName",
+              type: "input",
+              message: addEmpPrompt[1]
+          },
+      ])
+      .then((answ) => {
+          const {fName, lName} = answ;
+          queries.getRoleId().then(([rows,fields]) => {
+              const roles = rows.map((obj) => {
+                  return { name: obj.title, roleId: obj.id}
+              });
+              inquirer
+                .prompt([
+                    {
+                        name: "role",
+                        type: "list",
+                        message: addEmpPrompt[2],
+                        choices: roles
+                    }
+                ])
+                .then((role) => {
+                    console.log(role);
+                    console.log(roles);
+                    for(const each of roles){
+                        const {name, roleId} = each;
+                        if(name === role.role) {
+                            queries.getManId().then(([rows,fields]) => {
+                                const emps = rows.map((obj) => {
+                                    return { name: obj.last_name, manId: obj.id }
+                                });
+                                inquirer
+                                  .prompt([
+                                      {
+                                          name: "man",
+                                          type: "list",
+                                          message: addEmpPrompt[3],
+                                          choices: emps
+                                      }
+                                  ])
+                                  .then((man) => {
+                                      console.log(man);
+                                      console.log(emps);
+                                      for(const mana of emps) {
+                                          const { name, manId } = mana;
+                                          if(name === man.man) {
+                                              const query = new Queries(fName, lName, roleId, manId);
+                                              query.addEmp().then(([rows,fields]) => {
+                                                  console.log("Done!");
+                                                  menuInquirer(menuOptions);
+                                              })
+                                              break;
+                                          }
+                                      }
+                                  })
+                            })
+                        }
+                    }
+                })
+          })
+      })
 }
 
 menuInquirer(menuOptions);
