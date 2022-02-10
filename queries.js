@@ -33,8 +33,8 @@ class Queries {
         return db.promise().query("SELECT name, id FROM department")
     }
 
-    addRole(id) {
-        return db.promise().query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [this.answ1, this.answ2, id])
+    addRole() {
+        return db.promise().query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [this.answ1, this.answ2, this.answ3])
     }
 
     addEmp() {
@@ -47,6 +47,10 @@ class Queries {
 
     getManId() {
         return db.promise().query("SELECT last_name, id FROM employee")
+    }
+
+    updateRole() {
+        return db.promise().query("UPDATE employee SET role_id = ? WHERE id = ?", [this.answ1, this.answ2])
     }
 }
 
