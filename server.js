@@ -8,8 +8,6 @@ const addRolePrompt = ["Enter the name of the role", "What's the salary for that
 const addEmpPrompt = ["Enter employee's first name", "Enter employee's last name", "What's the employee's role?", "What's the employeer's manager?"];
 const updEmpRolePrompt = ["Select an employee to update", "What is the employee's new role?"];
 
-const departments = ["Sales", "Engineering", "Legal", "Finance"];
-
 const menuInquirer = (menuOptions) => {
     inquirer
       .prompt([
@@ -68,12 +66,10 @@ const addDepInquirer = (addDepPrompt) => {
           }
       ])
       .then((dep) => {
-          departments.push(dep.dep);
           const query = new Queries(dep.dep);
           query.addDep()
           .then(([rows,fields]) => {
               console.log("Departmend added");
-              console.log(departments);
               menuInquirer(menuOptions);
           })
       })
@@ -92,29 +88,40 @@ const addRoleInquirer = (addRolePrompt) => {
               type: "input",
               message: addRolePrompt[1]
           },
-          {
-              name: "dep",
-              type: "list",
-              message: addRolePrompt[2],
-              choices: [...departments]
-          }
       ])
       .then((answs) => {
-          const {title, salary, dep} = answs;
-          console.log(departments);
-          for(each of departments) {
-              if(each === dep) {
-                  console.log(departments.indexOf(each) + 1);
-                  const query = new Queries(title, salary, departments.indexOf(each) + 1);
-                  query.addRole()
-                  .then((row,field) => {
-                      console.log("Role added");
-                      menuInquirer(menuOptions);
-                  });
-                  break;
-              }
-          }
+          const {title, salary} = answs;
+          queries.getDep().then(([rows, fields]) => {
+            const departments = rows.map((obj) => {
+                return { name: obj.name, id: obj.id }
+            });
+            inquirer
+              .prompt([
+                  {
+                    name: "dep",
+                    type: "list",
+                    message: "Please help me",
+                    choices: departments
+                  }
+              ])
+              .then((dep) => {
+                  console.log(dep);
+                  console.log(departments);
+                  for(const each of departments) {
+                      const {name, id} = each;
+                      if(name === dep.dep) {
+                          const query = new Queries(title, salary)
+                          query.addRole(id).then(([rows,fields]) => {
+                            console.log("AHHHHHHHHHHHH!!!!!!!");
+                            menuInquirer(menuOptions);
+                        })
+                          break;
+                      }
+                  }
+              })
+    })
       })
+
 }
 
 menuInquirer(menuOptions);
