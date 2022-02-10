@@ -50,6 +50,9 @@ const menuInquirer = (menuOptions) => {
               case menuOptions[6]:
                   addEmpInquirer(addEmpPrompt);
                   break;
+              case menuOptions[7]:
+                  updEmpRoleInq(updEmpRolePrompt);
+                  break;
               case menuOptions[8]:
                   console.log("Bye!");
                   break;
@@ -166,6 +169,42 @@ const addEmpInquirer = (addEmpPrompt) => {
                 })
           })
       })
+}
+
+const updEmpRoleInq = (updEmpRolePrompt) => {
+    queries.getManId().then(([rows,fields]) => {
+        const emps = rows.map((obj) => {
+            return { name: obj.last_name, id: obj.id }
+        });
+        inquirer
+        .prompt(choicesPrompt("emp", updEmpRolePrompt[0], emps))
+        .then((answ) => {
+            console.log(answ);
+            const { emp } = answ;
+            console.log(emp);
+            console.log(emps);
+            const empId = getForeignId(emps, emp);
+            queries.getRoleId().then(([rows,fields]) => {
+                const roles = rows.map((obj) => {
+                    return { name: obj.title, id: obj.id}
+                });
+                inquirer 
+                  .prompt(choicesPrompt("role", updEmpRolePrompt[1], roles))
+                  .then((roleName) => {
+                      console.log(roleName);
+                      const { role } = roleName;
+                      console.log(role);
+                      console.log(roles);
+                      const roleId = getForeignId(roles, role);
+                      const query = new Queries(roleId, empId);
+                      query.updateRole().then(([rows,fields]) => {
+                          console.log("Employee role updated!");
+                          menuInquirer(menuOptions);
+                      })
+                })
+            })
+        })
+    })
 }
 
 menuInquirer(menuOptions);
