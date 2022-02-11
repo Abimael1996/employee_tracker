@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const Queries = require("./queries");
 const queries = new Queries();
+const cTable = require('console.table');
 
 const menuOptions = ["What would you like to do?", "View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"];
 const addDepPrompt = ["Enter the name of the department you want to add"];
