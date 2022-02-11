@@ -18,7 +18,7 @@ class Queries {
     }
 
     viewRoles() {
-        return db.promise().query("SELECT r.id, r.title, r.salary, d.name AS department FROM role AS r JOIN department AS d ON r.department_id = d.id")
+        return db.promise().query("SELECT r.id, r.title, d.name AS department, r.salary FROM role AS r JOIN department AS d ON r.department_id = d.id")
     }
 
     viewEmp() {
