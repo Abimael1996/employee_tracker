@@ -152,7 +152,7 @@ const addEmpInquirer = (addEmpPrompt) => {
                             return { name: obj.name, id: obj.id }
                         });
                         inquirer
-                          .prompt(choicesPrompt("man", addEmpPrompt[3], emps))
+                          .prompt(choicesPrompt("man", addEmpPrompt[3], [...emps, "None"]))
                           .then((manName) => {
                               console.log(manName);
                               const { man } = manName;
