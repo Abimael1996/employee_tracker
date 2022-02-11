@@ -5,7 +5,7 @@ const queries = new Queries();
 const menuOptions = ["What would you like to do?", "View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"];
 const addDepPrompt = ["Enter the name of the department you want to add"];
 const addRolePrompt = ["Enter the name of the role", "What's the salary for that role?", "What department does the role belongs to?"];
-const addEmpPrompt = ["Enter employee's first name", "Enter employee's last name", "What's the employee's role?", "What's the employeer's manager?"];
+const addEmpPrompt = ["Enter employee's first name", "Enter employee's last name", "What's the employee's role?", "What's the employee's manager?"];
 const updEmpRolePrompt = ["Select an employee to update", "What is the employee's new role?"];
 
 const menuInquirer = (menuOptions) => {
@@ -55,9 +55,10 @@ const menuInquirer = (menuOptions) => {
                   break;
               case menuOptions[8]:
                   console.log("Bye!");
+                  process.exit(1);
                   break;
               default:
-                  console.log("NOT YET BRO!");
+                  console.log("Something went wrong");
           }
       })
 }
