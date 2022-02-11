@@ -22,7 +22,7 @@ class Queries {
     }
 
     viewEmp() {
-        return db.promise().query("SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, m.last_name AS manager FROM employee AS e LEFT JOIN employee AS m ON e.manager_id = m.id JOIN role AS r ON e.role_id = r.id JOIN department AS d ON r.department_id = d.id")
+        return db.promise().query("SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, IFNULL(CONCAT(COALESCE(m.first_name), ' ', COALESCE(m.last_name)), 'None') AS manager FROM employee AS e LEFT JOIN employee AS m ON e.manager_id = m.id JOIN role AS r ON e.role_id = r.id JOIN department AS d ON r.department_id = d.id;")
     }
 
     addDep() {
@@ -46,7 +46,7 @@ class Queries {
     }
 
     getManId() {
-        return db.promise().query("SELECT last_name, id FROM employee")
+        return db.promise().query("SELECT CONCAT_WS(' ', first_name, last_name) AS name, id FROM employee")
     }
 
     updateRole() {

@@ -149,7 +149,7 @@ const addEmpInquirer = (addEmpPrompt) => {
                     const roleId = getForeignId(roles, role);
                     queries.getManId().then(([rows,fields]) => {
                         const emps = rows.map((obj) => {
-                            return { name: obj.last_name, id: obj.id }
+                            return { name: obj.name, id: obj.id }
                         });
                         inquirer
                           .prompt(choicesPrompt("man", addEmpPrompt[3], emps))
@@ -174,7 +174,7 @@ const addEmpInquirer = (addEmpPrompt) => {
 const updEmpRoleInq = (updEmpRolePrompt) => {
     queries.getManId().then(([rows,fields]) => {
         const emps = rows.map((obj) => {
-            return { name: obj.last_name, id: obj.id }
+            return { name: obj.name, id: obj.id }
         });
         inquirer
         .prompt(choicesPrompt("emp", updEmpRolePrompt[0], emps))
