@@ -105,10 +105,7 @@ const addRoleInquirer = (addRolePrompt) => {
             inquirer
               .prompt(choicesPrompt("dep", addRolePrompt[2], departments))
               .then((depName) => {
-                  console.log(depName);
                   const { dep } = depName;
-                  console.log(dep);
-                  console.log(departments);
                   const id = getForeignId(departments, dep);
                   const query = new Queries(title, salary, id)
                   query.addRole().then(([rows,fields]) => {
@@ -143,10 +140,7 @@ const addEmpInquirer = (addEmpPrompt) => {
               inquirer 
                 .prompt(choicesPrompt("role", addEmpPrompt[2], roles))
                 .then((roleName) => {
-                    console.log(roleName);
                     const { role } = roleName;
-                    console.log(role);
-                    console.log(roles);
                     const roleId = getForeignId(roles, role);
                     queries.getManId().then(([rows,fields]) => {
                         const emps = rows.map((obj) => {
@@ -155,10 +149,7 @@ const addEmpInquirer = (addEmpPrompt) => {
                         inquirer
                           .prompt(choicesPrompt("man", addEmpPrompt[3], [...emps, "None"]))
                           .then((manName) => {
-                              console.log(manName);
                               const { man } = manName;
-                              console.log(man);
-                              console.log(emps);
                               const manId = getForeignId(emps, man);
                               const query = new Queries(fName, lName, roleId, manId);
                               query.addEmp().then(([rows,fields]) => {
@@ -180,10 +171,7 @@ const updEmpRoleInq = (updEmpRolePrompt) => {
         inquirer
         .prompt(choicesPrompt("emp", updEmpRolePrompt[0], emps))
         .then((answ) => {
-            console.log(answ);
             const { emp } = answ;
-            console.log(emp);
-            console.log(emps);
             const empId = getForeignId(emps, emp);
             queries.getRoleId().then(([rows,fields]) => {
                 const roles = rows.map((obj) => {
@@ -192,14 +180,11 @@ const updEmpRoleInq = (updEmpRolePrompt) => {
                 inquirer 
                   .prompt(choicesPrompt("role", updEmpRolePrompt[1], roles))
                   .then((roleName) => {
-                      console.log(roleName);
                       const { role } = roleName;
-                      console.log(role);
-                      console.log(roles);
                       const roleId = getForeignId(roles, role);
                       const query = new Queries(roleId, empId);
                       query.updateRole().then(([rows,fields]) => {
-                          console.log("Employee role updated!");
+                          console.log("Employee role updated");
                           menuInquirer(menuOptions);
                       })
                 })
